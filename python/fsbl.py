@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License along with
 # FSBL.  If not, see <https://www.gnu.org/licenses/>.
 
+import sys
+
 # Global parameters
 ALPHA = 1.0
 G0 = 0.0
@@ -52,16 +54,36 @@ def similarity_coordinate( n, eta_max ):
         eta[i+1] = eta[i] + deta
     return eta
 
-# Command line arguments
-beta = 0.0
-f0 = 0.0
-n = 128
-eta_max = 5.0
+def main( argc, argv ):
+    beta = 0.0
+    f0 = 0.0
+    n = 128
+    eta_max = 5.0
 
-eta = similarity_coordinate( n, eta_max )
+    if ( argc > 1 ):
+        beta = float( argv[1] )
 
-h0 = 0.4696
+    if ( argc > 2 ):
+        f0 = float( argv[2] )
 
-f, g, h = explicit_first_order_solver( f0, G0, h0, ALPHA, beta, eta )
+    if ( argc > 3 ):
+        n = int( argv[3] )
 
-print( g[-1] )
+    if ( argc > 4 ):
+        eta_max = float( argv[4] )
+
+    print( beta )
+    print( f0 )
+    print( n )
+    print( eta_max )
+
+    eta = similarity_coordinate( n, eta_max )
+
+    h0 = 0.4696
+
+    f, g, h = explicit_first_order_solver( f0, G0, h0, ALPHA, beta, eta )
+
+    print( g[-1] )
+
+if __name__ == "__main__":
+    main( len(sys.argv), sys.argv )
