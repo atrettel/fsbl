@@ -47,6 +47,66 @@ def explicit_first_order_solver( f0, g0, h0, beta, eta ):
 
     return f, g, h
 
+def runge_kutta_solver( f0, g0, h0, beta, eta ):
+    n = len(eta)
+
+    f = [f0] * n
+    g = [g0] * n
+    h = [h0] * n
+
+    for i in range(n-1):
+        deta = eta[i+1] - eta[i]
+
+        fp1, gp1, hp1 = first_derivatives(
+            f[i],
+            g[i],
+            h[i],
+            beta,
+        )
+
+        df1 = deta * fp1
+        dg1 = deta * gp1
+        dh1 = deta * hp1
+
+        fp2, gp2, hp2 = first_derivatives(
+            f[i] + 0.5 * df1,
+            g[i] + 0.5 * dg1,
+            h[i] + 0.5 * dh1,
+            beta,
+        )
+
+        df2 = deta * fp2
+        dg2 = deta * gp2
+        dh2 = deta * hp2
+
+        fp3, gp3, hp3 = first_derivatives(
+            f[i] + 0.5 * df2,
+            g[i] + 0.5 * dg2,
+            h[i] + 0.5 * dh2,
+            beta,
+        )
+
+        df3 = deta * fp3
+        dg3 = deta * gp3
+        dh3 = deta * hp3
+
+        fp4, gp4, hp4 = first_derivatives(
+            f[i] + df3,
+            g[i] + dg3,
+            h[i] + dh3,
+            beta,
+        )
+
+        df4 = deta * fp4
+        dg4 = deta * gp4
+        dh4 = deta * hp4
+
+        f[i+1] = f[i] + ( df1 + 2.0 * df2 + 2.0 * df3 + df4 ) / 6.0
+        g[i+1] = g[i] + ( dg1 + 2.0 * dg2 + 2.0 * dg3 + dg4 ) / 6.0
+        h[i+1] = h[i] + ( dh1 + 2.0 * dh2 + 2.0 * dh3 + dh4 ) / 6.0
+
+    return f, g, h
+
 def bisection_search( beta, f0, n, eta_max ):
     deta = eta_max / float(n-1)
     eta = [0.0] * n
@@ -54,17 +114,17 @@ def bisection_search( beta, f0, n, eta_max ):
         eta[i+1] = eta[i] + deta
 
     h0_l = 0.0
-    f_l, g_l, h_l = explicit_first_order_solver( f0, G0, h0_l, beta, eta )
+    f_l, g_l, h_l = runge_kutta_solver( f0, G0, h0_l, beta, eta )
     sign_l = ( ( g_l[n-1] - GINF ) > 0.0 )
 
     h0_r = 1.0
-    f_r, g_r, h_l = explicit_first_order_solver( f0, G0, h0_r, beta, eta )
+    f_r, g_r, h_l = runge_kutta_solver( f0, G0, h0_r, beta, eta )
     sign_r = ( ( g_r[n-1] - GINF ) > 0.0 )
 
     n_iter = 0
     while ( n_iter < N_ITER_MAX ):
         h0_c = 0.5 * ( h0_l + h0_r )
-        f_c, g_c, h_c = explicit_first_order_solver( f0, G0, h0_c, beta, eta )
+        f_c, g_c, h_c = runge_kutta_solver( f0, G0, h0_c, beta, eta )
         sign_c = ( ( g_c[n-1] - GINF ) > 0.0 )
 
         if ( ( h0_r - h0_l ) <= 0.0 ):
@@ -95,8 +155,8 @@ def bisection_search( beta, f0, n, eta_max ):
 def main( argc, argv ):
     beta = 0.0
     f0 = 0.0
-    n = 2**16
-    eta_max = 100.0
+    n = 1024
+    eta_max = 5.0
 
     if ( argc > 1 ):
         beta = float( argv[1] )
