@@ -28,11 +28,11 @@ def first_order_system( f, g, h, beta ):
     hp = -ALPHA * f * h + beta * ( g * g - 1.0 )
     return fp, gp, hp
 
-def solve_rk4( f0, g0, h0, beta, eta ):
+def solve_rk4( f0, h0, beta, eta ):
     n = len(eta)
 
     f = [f0] * n
-    g = [g0] * n
+    g = [G0] * n
     h = [h0] * n
 
     for i in range(n-1):
@@ -95,11 +95,11 @@ def bisection_search( beta, f0, n, eta_max, h0_min, h0_max ):
         eta[i+1] = eta[i] + deta
 
     h0_l = h0_min
-    f_l, g_l, h_l = solve_rk4( f0, G0, h0_l, beta, eta )
+    f_l, g_l, h_l = solve_rk4( f0, h0_l, beta, eta )
     sign_l = ( g_l[n-1] > GINF )
 
     h0_r = h0_max
-    f_r, g_r, h_l = solve_rk4( f0, G0, h0_r, beta, eta )
+    f_r, g_r, h_l = solve_rk4( f0, h0_r, beta, eta )
     sign_r = ( g_r[n-1] > GINF )
 
     assert( h0_r > h0_l )
@@ -109,7 +109,7 @@ def bisection_search( beta, f0, n, eta_max, h0_min, h0_max ):
     n_iter = 0
     while ( n_iter < N_ITER_MAX ):
         h0_c = 0.5 * ( h0_l + h0_r )
-        f_c, g_c, h_c = solve_rk4( f0, G0, h0_c, beta, eta )
+        f_c, g_c, h_c = solve_rk4( f0, h0_c, beta, eta )
         sign_c = ( g_c[n-1] > GINF )
 
         if ( ( h0_r - h0_l ) <= 0.0 ):
