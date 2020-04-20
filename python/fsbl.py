@@ -20,7 +20,7 @@ ALPHA = 1.0
 G0 = 0.0
 GINF = 1.0
 GINF_TOL = 1.0e-15
-N_ITER_MAX = 128
+N_ITER_MAX = 256
 
 def first_order_system( f, g, h, beta ):
     fp = g
@@ -143,7 +143,7 @@ def main( argc, argv ):
     n = 2**14
     eta_max = 10.0
     h0_min = 0.0
-    h0_max = 2.0
+    h0_max = 1.0
 
     if ( argc > 1 ):
         beta = float( argv[1] )
