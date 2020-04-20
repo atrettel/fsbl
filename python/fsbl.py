@@ -96,11 +96,13 @@ def bisection_search( beta, f0, n, eta_max ):
 
     h0_l = 0.0
     f_l, g_l, h_l = solve_rk4( f0, G0, h0_l, beta, eta )
-    sign_l = ( ( g_l[n-1] - GINF ) > 0.0 )
+    sign_l = ( g_l[n-1] > GINF )
 
     h0_r = 1.0
     f_r, g_r, h_l = solve_rk4( f0, G0, h0_r, beta, eta )
-    sign_r = ( ( g_r[n-1] - GINF ) > 0.0 )
+    sign_r = ( g_r[n-1] > GINF )
+
+    assert( h0_r > h0_l )
 
     print( "[{:f}, {:f}]".format( h0_l, h0_r ) )
 
@@ -108,7 +110,7 @@ def bisection_search( beta, f0, n, eta_max ):
     while ( n_iter < N_ITER_MAX ):
         h0_c = 0.5 * ( h0_l + h0_r )
         f_c, g_c, h_c = solve_rk4( f0, G0, h0_c, beta, eta )
-        sign_c = ( ( g_c[n-1] - GINF ) > 0.0 )
+        sign_c = ( g_c[n-1] > GINF )
 
         if ( ( h0_r - h0_l ) <= 0.0 ):
             print( "Interval has zero length." )
