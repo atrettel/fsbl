@@ -16,20 +16,19 @@
 
 import sys
 
-# Global parameters
 ALPHA = 1.0
 G0 = 0.0
 GINF = 1.0
-GINF_TOL = 1.0e-15
+GINF_TOL = 1.0e-16
 N_ITER_MAX = 128
 
-def first_derivatives( f, g, h, beta ):
+def first_order_system( f, g, h, beta ):
     fp = g
     gp = h
     hp = -ALPHA * f * h + beta * ( g**2.0 - 1.0 )
     return fp, gp, hp
 
-def explicit_first_order_solver( f0, g0, h0, beta, eta ):
+def solve_rk4( f0, g0, h0, beta, eta ):
     n = len(eta)
 
     f = [f0] * n
@@ -39,25 +38,7 @@ def explicit_first_order_solver( f0, g0, h0, beta, eta ):
     for i in range(n-1):
         deta = eta[i+1] - eta[i]
 
-        fp, gp, hp = first_derivatives( f[i], g[i], h[i], beta )
-
-        f[i+1] = f[i] + deta * fp
-        g[i+1] = g[i] + deta * gp
-        h[i+1] = h[i] + deta * hp
-
-    return f, g, h
-
-def runge_kutta_solver( f0, g0, h0, beta, eta ):
-    n = len(eta)
-
-    f = [f0] * n
-    g = [g0] * n
-    h = [h0] * n
-
-    for i in range(n-1):
-        deta = eta[i+1] - eta[i]
-
-        fp1, gp1, hp1 = first_derivatives(
+        fp1, gp1, hp1 = first_order_system(
             f[i],
             g[i],
             h[i],
@@ -68,7 +49,7 @@ def runge_kutta_solver( f0, g0, h0, beta, eta ):
         dg1 = deta * gp1
         dh1 = deta * hp1
 
-        fp2, gp2, hp2 = first_derivatives(
+        fp2, gp2, hp2 = first_order_system(
             f[i] + 0.5 * df1,
             g[i] + 0.5 * dg1,
             h[i] + 0.5 * dh1,
@@ -79,7 +60,7 @@ def runge_kutta_solver( f0, g0, h0, beta, eta ):
         dg2 = deta * gp2
         dh2 = deta * hp2
 
-        fp3, gp3, hp3 = first_derivatives(
+        fp3, gp3, hp3 = first_order_system(
             f[i] + 0.5 * df2,
             g[i] + 0.5 * dg2,
             h[i] + 0.5 * dh2,
@@ -90,7 +71,7 @@ def runge_kutta_solver( f0, g0, h0, beta, eta ):
         dg3 = deta * gp3
         dh3 = deta * hp3
 
-        fp4, gp4, hp4 = first_derivatives(
+        fp4, gp4, hp4 = first_order_system(
             f[i] + df3,
             g[i] + dg3,
             h[i] + dh3,
@@ -114,17 +95,19 @@ def bisection_search( beta, f0, n, eta_max ):
         eta[i+1] = eta[i] + deta
 
     h0_l = 0.0
-    f_l, g_l, h_l = runge_kutta_solver( f0, G0, h0_l, beta, eta )
+    f_l, g_l, h_l = solve_rk4( f0, G0, h0_l, beta, eta )
     sign_l = ( ( g_l[n-1] - GINF ) > 0.0 )
 
     h0_r = 1.0
-    f_r, g_r, h_l = runge_kutta_solver( f0, G0, h0_r, beta, eta )
+    f_r, g_r, h_l = solve_rk4( f0, G0, h0_r, beta, eta )
     sign_r = ( ( g_r[n-1] - GINF ) > 0.0 )
+
+    print( "[{:f}, {:f}]".format( h0_l, h0_r ) )
 
     n_iter = 0
     while ( n_iter < N_ITER_MAX ):
         h0_c = 0.5 * ( h0_l + h0_r )
-        f_c, g_c, h_c = runge_kutta_solver( f0, G0, h0_c, beta, eta )
+        f_c, g_c, h_c = solve_rk4( f0, G0, h0_c, beta, eta )
         sign_c = ( ( g_c[n-1] - GINF ) > 0.0 )
 
         if ( ( h0_r - h0_l ) <= 0.0 ):
@@ -155,8 +138,8 @@ def bisection_search( beta, f0, n, eta_max ):
 def main( argc, argv ):
     beta = 0.0
     f0 = 0.0
-    n = 1024
-    eta_max = 5.0
+    n = 2**14
+    eta_max = 100.0
 
     if ( argc > 1 ):
         beta = float( argv[1] )
