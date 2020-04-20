@@ -102,10 +102,6 @@ def bisection_search( beta, f0, n, eta_max, h0_min, h0_max ):
     f_r, g_r, h_l = solve_rk4( f0, h0_r, beta, eta )
     sign_r = ( g_r[n-1] > GINF )
 
-    assert( h0_r > h0_l )
-
-    print( "[{:f}, {:f}]".format( h0_l, h0_r ) )
-
     n_iter = 0
     while ( n_iter < N_ITER_MAX ):
         h0_c = 0.5 * ( h0_l + h0_r )
@@ -116,7 +112,9 @@ def bisection_search( beta, f0, n, eta_max, h0_min, h0_max ):
             print( "Interval has zero length." )
             break
         elif ( ( g_c[n-1] - GINF)**2.0 < GINF_TOL**2.0 ):
-            print( "Solution within tolerance." )
+            print( "Solution within tolerance (GINF_TOL = {:e}).".format(
+                GINF_TOL
+            ) )
             break
 
         if ( sign_c == sign_l ):
@@ -133,7 +131,9 @@ def bisection_search( beta, f0, n, eta_max, h0_min, h0_max ):
         n_iter += 1
 
     if ( n_iter == N_ITER_MAX ):
-        print( "Maximum number of iterations." )
+        print( "Maximum number of iterations (N_ITER_MAX = {:d}).".format(
+            N_ITER_MAX
+        ) )
 
     return eta, f_c, g_c, h_c
 
@@ -163,17 +163,19 @@ def main( argc, argv ):
     if ( argc > 6 ):
         h0_max = float( argv[6] )
 
+    assert( h0_max > h0_min )
+
     print( "beta    = {:f}".format( beta    ) )
     print( "f0      = {:f}".format( f0      ) )
     print( "n       = {:d}".format( n       ) )
     print( "eta_max = {:f}".format( eta_max ) )
     print( "h0_min  = {:f}".format( h0_min  ) )
-    print( "h0_min  = {:f}".format( h0_max  ) )
+    print( "h0_max  = {:f}".format( h0_max  ) )
 
     eta, f, g, h = bisection_search( beta, f0, n, eta_max, h0_min, h0_max )
 
-    print( h[0] )
-    print( g[n-1] )
+    print( "h0   = {:f}".format( h[0]   ) )
+    print( "ginf = {:f}".format( g[n-1] ) )
 
 if __name__ == "__main__":
     main( len(sys.argv), sys.argv )
