@@ -19,8 +19,8 @@ import sys
 ALPHA = 1.0
 G0 = 0.0
 GINF = 1.0
-GINF_TOL = 1.0e-16
-N_ITER_MAX = 128
+GINF_TOL = 1.0e-15
+N_ITER_MAX = 256
 
 def first_order_system( f, g, h, beta ):
     fp = g
@@ -94,11 +94,14 @@ def bisection_search( beta, f0, n, eta_max ):
     for i in range(n-1):
         eta[i+1] = eta[i] + deta
 
-    h0_l = 0.0
+    h0_min = 0.0
+    h0_max = 2.0
+
+    h0_l = h0_min
     f_l, g_l, h_l = solve_rk4( f0, G0, h0_l, beta, eta )
     sign_l = ( g_l[n-1] > GINF )
 
-    h0_r = 1.0
+    h0_r = h0_max
     f_r, g_r, h_l = solve_rk4( f0, G0, h0_r, beta, eta )
     sign_r = ( g_r[n-1] > GINF )
 
