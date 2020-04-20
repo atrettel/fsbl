@@ -25,7 +25,7 @@ N_ITER_MAX = 128
 def first_order_system( f, g, h, beta ):
     fp = g
     gp = h
-    hp = -ALPHA * f * h + beta * ( g**2.0 - 1.0 )
+    hp = -ALPHA * f * h + beta * ( g * g - 1.0 )
     return fp, gp, hp
 
 def solve_rk4( f0, g0, h0, beta, eta ):
