@@ -9,6 +9,37 @@ program, especially in regards to how they handle different numerical issues
 like arrays and floating point numbers.
 
 
+## Usage
+
+    $ python3 fsbl.py [BETA] [F0] [N] [ETA_MAX] [H0_MIN] [H0_MAX]
+
+All command line arguments are OPTIONAL.  The default values are
+
+- `beta = 0.0` (Falkner-Skan pressure gradient parameter)
+
+- `f0 = 0.0` (boundary condition on `f`)
+
+- `n = 16384` (number of grid points)
+
+- `eta_max = 10.0` (maximum coordinate value)
+
+- `h0_min = 0.0` (minimum `h0` value for bisection search)
+
+- `h0_max = 1.0` (maximum `h0` value for bisection search)
+
+For most cases far away from `beta = 0.0`, all command line arguments must be
+specified to get a meaningful solution.
+
+
+## TODO list
+
+- Code ported to several languages, including C, C++, Fortran, Java, Julia, ...
+
+- Detailed documentation on the mathematics behind the Falkner-Skan profiles.
+
+- Verification and validation.
+
+
 ## Tabulated verification and validation sources
 
 - Hartree, D. R. 1937.  "On an Equation Occurring in Falkner and Skan's
@@ -33,22 +64,12 @@ like arrays and floating point numbers.
 
     - Blasius boundary layers with suction and blowing.
 
-- Stewartson, K. 1954.  "Further Solutions of the Falkner-Skan Equation".
-  Mathematical Proceedings of the Cambridge Philosophical Society 50 (3), pp.
-  454--465.
-
-    - Reversed flow Falkner-Skan boundary layers.
-
-    - <https://doi.org/10.1017/S030500410002956X>
-
 - Inglis, J. A. 1962.  "A digital computer solution of the Falkner and Skan
   boundary layer equation."  Naval Postgraduate School master's thesis.
 
     - Falkner-Skan boundary layers without suction and blowing.
 
     - <https://apps.dtic.mil/sti/citations/AD0481404>
-
-    - <http://hdl.handle.net/10945/12014>
 
 -------------------------------------------------------------------------------
 
