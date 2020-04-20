@@ -137,6 +137,37 @@ def bisection_search( beta, f0, n, eta_max, h0_min, h0_max ):
 
     return eta, f_c, g_c, h_c
 
+def save_profiles( eta, f, g, h, beta ):
+    n = len(eta)
+
+    filename = "profiles_{:+10.8f}_{:+10.8f}_{:d}_{:10.8}.csv".format(
+       beta,
+       f[0],
+       n,
+       max(eta),
+    ).replace( " ", "0" )
+
+    with open( filename, "w" ) as output_file:
+        header = "# Falker-Skan profiles for beta = {:+10.8f}, f0 = {:+10.8f}\n".format(
+            beta,
+            f[0],
+        )
+
+        header += "# (1) point number, (2) eta, (3) f, (4) g, (5) h\n"
+
+        output_file.write( header )
+
+        for i in range(n):
+            line = "{:5d}, {:+20.16f}, {:+20.16f}, {:+20.16f}, {:+20.16f},\n".format(
+                i+1,
+                eta[i],
+                f[i],
+                g[i],
+                h[i],
+            )
+
+            output_file.write( line )
+
 def main( argc, argv ):
     beta = 0.0
     f0 = 0.0
@@ -176,6 +207,12 @@ def main( argc, argv ):
 
     print( "h0   = {:f}".format( h[0]   ) )
     print( "ginf = {:f}".format( g[n-1] ) )
+
+    if ( ( g[n-1] - GINF )**2.0 < GINF_TOL**2.0 ):
+        save_profiles( eta, f, g, h, beta )
+        exit(0)
+    else:
+        exit(1)
 
 if __name__ == "__main__":
     main( len(sys.argv), sys.argv )
