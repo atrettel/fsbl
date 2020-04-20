@@ -20,7 +20,7 @@ ALPHA = 1.0
 G0 = 0.0
 GINF = 1.0
 GINF_TOL = 1.0e-15
-N_ITER_MAX = 256
+N_ITER_MAX = 128
 
 def first_order_system( f, g, h, beta ):
     fp = g
@@ -88,14 +88,11 @@ def solve_rk4( f0, g0, h0, beta, eta ):
 
     return f, g, h
 
-def bisection_search( beta, f0, n, eta_max ):
+def bisection_search( beta, f0, n, eta_max, h0_min, h0_max ):
     deta = eta_max / float(n-1)
     eta = [0.0] * n
     for i in range(n-1):
         eta[i+1] = eta[i] + deta
-
-    h0_min = 0.0
-    h0_max = 2.0
 
     h0_l = h0_min
     f_l, g_l, h_l = solve_rk4( f0, G0, h0_l, beta, eta )
@@ -144,7 +141,9 @@ def main( argc, argv ):
     beta = 0.0
     f0 = 0.0
     n = 2**14
-    eta_max = 100.0
+    eta_max = 10.0
+    h0_min = 0.0
+    h0_max = 2.0
 
     if ( argc > 1 ):
         beta = float( argv[1] )
@@ -158,12 +157,20 @@ def main( argc, argv ):
     if ( argc > 4 ):
         eta_max = float( argv[4] )
 
-    print( beta )
-    print( f0 )
-    print( n )
-    print( eta_max )
+    if ( argc > 5 ):
+        h0_min = float( argv[5] )
 
-    eta, f, g, h = bisection_search( beta, f0, n, eta_max )
+    if ( argc > 6 ):
+        h0_max = float( argv[6] )
+
+    print( "beta    = {:f}".format( beta    ) )
+    print( "f0      = {:f}".format( f0      ) )
+    print( "n       = {:d}".format( n       ) )
+    print( "eta_max = {:f}".format( eta_max ) )
+    print( "h0_min  = {:f}".format( h0_min  ) )
+    print( "h0_min  = {:f}".format( h0_max  ) )
+
+    eta, f, g, h = bisection_search( beta, f0, n, eta_max, h0_min, h0_max )
 
     print( h[0] )
     print( g[n-1] )
