@@ -97,7 +97,7 @@ def find_bisection_search_interval( f0, h0_min, h0_max, beta, eta ):
     dh0 = dh0_initial
     h0_l = h0_min
     f_l, g_l, h_l = solve_rk4( f0, h0_l, beta, eta )
-    while ( math.isnan( g_l[n-1] ) ):
+    while ( math.isnan( g_l[-1] ) ):
         h0_l += dh0
         f_l, g_l, h_l = solve_rk4( f0, h0_l, beta, eta )
 
@@ -108,7 +108,7 @@ def find_bisection_search_interval( f0, h0_min, h0_max, beta, eta ):
     dh0 = dh0_initial
     h0_r = h0_max
     f_r, g_r, h_r = solve_rk4( f0, h0_r, beta, eta )
-    while ( math.isnan( g_r[n-1] ) ):
+    while ( math.isnan( g_r[-1] ) ):
         h0_r -= dh0
         f_r, g_r, h_r = solve_rk4( f0, h0_r, beta, eta )
 
@@ -117,8 +117,8 @@ def find_bisection_search_interval( f0, h0_min, h0_max, beta, eta ):
             dh0 /= 2.0
 
     # Check to ensure that the left sign does not equal the right sign.
-    sign_l = ( g_l[n-1] > GINF )
-    sign_r = ( g_r[n-1] > GINF )
+    sign_l = ( g_l[-1] > GINF )
+    sign_r = ( g_r[-1] > GINF )
 
     while ( sign_l == sign_r ):
         h0_l += dh0
@@ -129,8 +129,8 @@ def find_bisection_search_interval( f0, h0_min, h0_max, beta, eta ):
         f_l, g_l, h_l = solve_rk4( f0, h0_l, beta, eta )
         f_r, g_r, h_r = solve_rk4( f0, h0_r, beta, eta )
 
-        sign_l = ( g_l[n-1] > GINF )
-        sign_r = ( g_r[n-1] > GINF )
+        sign_l = ( g_l[-1] > GINF )
+        sign_r = ( g_r[-1] > GINF )
 
     return h0_l, h0_r
 
@@ -153,10 +153,10 @@ def bisection_search( beta, f0, n, eta_max, h0_min, h0_max ):
     print( "h0_r    = {:f}".format( h0_r ) )
 
     f_l, g_l, h_l = solve_rk4( f0, h0_l, beta, eta )
-    sign_l = ( g_l[n-1] > GINF )
+    sign_l = ( g_l[-1] > GINF )
 
     f_r, g_r, h_l = solve_rk4( f0, h0_r, beta, eta )
-    sign_r = ( g_r[n-1] > GINF )
+    sign_r = ( g_r[-1] > GINF )
 
     assert( sign_l != sign_r )
 
@@ -164,12 +164,12 @@ def bisection_search( beta, f0, n, eta_max, h0_min, h0_max ):
     while ( n_iter < N_ITER_MAX ):
         h0_c = 0.5 * ( h0_l + h0_r )
         f_c, g_c, h_c = solve_rk4( f0, h0_c, beta, eta )
-        sign_c = ( g_c[n-1] > GINF )
+        sign_c = ( g_c[-1] > GINF )
 
         if ( ( h0_r - h0_l ) <= 0.0 ):
             print( "Interval has zero length." )
             break
-        elif ( ( g_c[n-1] - GINF)**2.0 < GINF_TOL**2.0 ):
+        elif ( ( g_c[-1] - GINF )**2.0 < GINF_TOL**2.0 ):
             print( "Solution within tolerance (GINF_TOL = {:e}).".format(
                 GINF_TOL
             ) )
@@ -262,9 +262,9 @@ def main( argc, argv ):
     eta, f, g, h = bisection_search( beta, f0, n, eta_max, h0_min, h0_max )
 
     print( "h0   = {:f}".format( h[0]   ) )
-    print( "ginf = {:f}".format( g[n-1] ) )
+    print( "ginf = {:f}".format( g[-1] ) )
 
-    if ( ( g[n-1] - GINF )**2.0 < GINF_TOL**2.0 ):
+    if ( ( g[-1] - GINF )**2.0 < GINF_TOL**2.0 ):
         save_profiles( eta, f, g, h, beta )
         exit(0)
     else:
