@@ -11,7 +11,9 @@ like arrays and floating point numbers.
 
 ## Usage
 
-    $ python3 fsbl.py [BETA] [F0] [N] [ETA_MAX] [H0_MIN] [H0_MAX]
+The Python program is the prototype for the rest of the programs.
+
+    $ python3 fsbl.py [beta] [f0] [n] [eta_max] [h0_min] [h0_max]
 
 All command line arguments are OPTIONAL.  The default values are
 
@@ -25,10 +27,15 @@ All command line arguments are OPTIONAL.  The default values are
 
 - `h0_min = 0.0` (minimum `h0` value for bisection search)
 
-- `h0_max = 1.0` (maximum `h0` value for bisection search)
+- `h0_max = 0.0` (maximum `h0` value for bisection search)
 
-For most cases far away from `beta = 0.0`, all command line arguments must be
-specified to get a meaningful solution.
+When `h0_min == h0_max`, the program uses a short algorithm to find the
+bisection interval.  This algorithm works well for `-0.19 < beta < +1.2`;
+outside of this range all command line arguments must be specified to get a
+meaningful solution.  For example, for the case of `beta = 2.0`, the following
+parameters work:
+
+    $ python3 fsbl.py 2.0 0.0 16384 10.0 1.67 1.69
 
 
 ## TODO list
