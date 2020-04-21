@@ -11,7 +11,8 @@ like arrays and floating point numbers.
 
 ## Usage
 
-The Python program is the prototype for the rest of the programs.
+The Python version is the prototype (reference implementation) for the other
+versions of the program.
 
     $ python3 fsbl.py [beta] [f0] [n] [eta_max] [h0_min] [h0_max]
 
@@ -29,13 +30,18 @@ All command line arguments are OPTIONAL.  The default values are
 
 - `h0_max = 0.0` (maximum `h0` value for bisection search)
 
-When `h0_min == h0_max`, the program uses a short algorithm to find the
-bisection interval.  This algorithm works well for `-0.19 < beta < +1.2`;
-outside of this range all command line arguments must be specified to get a
+When `h0_min == h0_max`, the program uses an algorithm to find the bisection
+search interval.  This algorithm works well for `-0.198837 < beta < +1.25`.
+Outside of this range all command line arguments must be specified to get a
 meaningful solution.  For example, for the case of `beta = 2.0`, the following
 parameters work:
 
     $ python3 fsbl.py 2.0 0.0 16384 10.0 1.67 1.69
+
+Note that the program has difficulty calculating the profile as it approaches
+separation at `beta = -0.19884`.  It can get rather close (`beta = -0.198837`)
+but not all the way there as it is written right now.  It should be possible to
+correct this issue but I at least wanted to note it for the time being.
 
 
 ## TODO list
@@ -44,7 +50,7 @@ parameters work:
 
 - Detailed documentation on the mathematics behind the Falkner-Skan profiles.
 
-- Verification and validation.
+- Verification and validation and uncertainty quantification.
 
 
 ## Tabulated verification and validation sources
