@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License along with
 # FSBL.  If not, see <https://www.gnu.org/licenses/>.
 
+import math
 import sys
 
 ALPHA = 1.0
@@ -88,19 +89,76 @@ def solve_rk4( f0, h0, beta, eta ):
 
     return f, g, h
 
+def find_bisection_search_interval( f0, h0_min, h0_max, beta, eta ):
+    n = len(eta)
+
+    dh0_initial = ( h0_max - h0_min ) / 128.0
+
+    dh0 = dh0_initial
+    h0_l = h0_min
+    f_l, g_l, h_l = solve_rk4( f0, h0_l, beta, eta )
+    while ( math.isnan( g_l[n-1] ) ):
+        h0_l += dh0
+        f_l, g_l, h_l = solve_rk4( f0, h0_l, beta, eta )
+
+        if ( h0_l >= h0_max ):
+            h0_l = h0_min
+            dh0 /= 2.0
+
+    dh0 = dh0_initial
+    h0_r = h0_max
+    f_r, g_r, h_r = solve_rk4( f0, h0_r, beta, eta )
+    while ( math.isnan( g_r[n-1] ) ):
+        h0_r -= dh0
+        f_r, g_r, h_r = solve_rk4( f0, h0_r, beta, eta )
+
+        if ( h0_r <= h0_min ):
+            h0_r = h0_max
+            dh0 /= 2.0
+
+    # Check to ensure that the left sign does not equal the right sign.
+    sign_l = ( g_l[n-1] > GINF )
+    sign_r = ( g_r[n-1] > GINF )
+
+    while ( sign_l == sign_r ):
+        h0_l += dh0
+        h0_r -= dh0
+
+        assert( h0_r > h0_l )
+
+        f_l, g_l, h_l = solve_rk4( f0, h0_l, beta, eta )
+        f_r, g_r, h_r = solve_rk4( f0, h0_r, beta, eta )
+
+        sign_l = ( g_l[n-1] > GINF )
+        sign_r = ( g_r[n-1] > GINF )
+
+    return h0_l, h0_r
+
 def bisection_search( beta, f0, n, eta_max, h0_min, h0_max ):
     deta = eta_max / float(n-1)
     eta = [0.0] * n
     for i in range(n-1):
         eta[i+1] = eta[i] + deta
 
-    h0_l = h0_min
+    if ( h0_max == h0_min ):
+        h0_l, h0_r = find_bisection_search_interval(
+            f0, 0.0, 4.0, beta, eta )
+    else:
+        h0_l = h0_min
+        h0_r = h0_max
+
+    assert( h0_r > h0_l )
+
+    print( "h0_l    = {:f}".format( h0_l ) )
+    print( "h0_r    = {:f}".format( h0_r ) )
+
     f_l, g_l, h_l = solve_rk4( f0, h0_l, beta, eta )
     sign_l = ( g_l[n-1] > GINF )
 
-    h0_r = h0_max
     f_r, g_r, h_l = solve_rk4( f0, h0_r, beta, eta )
     sign_r = ( g_r[n-1] > GINF )
+
+    assert( sign_l != sign_r )
 
     n_iter = 0
     while ( n_iter < N_ITER_MAX ):
@@ -174,7 +232,7 @@ def main( argc, argv ):
     n = 2**14
     eta_max = 10.0
     h0_min = 0.0
-    h0_max = 1.0
+    h0_max = 0.0
 
     if ( argc > 1 ):
         beta = float( argv[1] )
@@ -193,8 +251,6 @@ def main( argc, argv ):
 
     if ( argc > 6 ):
         h0_max = float( argv[6] )
-
-    assert( h0_max > h0_min )
 
     print( "beta    = {:f}".format( beta    ) )
     print( "f0      = {:f}".format( f0      ) )
