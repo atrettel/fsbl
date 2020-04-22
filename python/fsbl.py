@@ -23,6 +23,13 @@ GINF = 1.0
 GINF_TOL = 1.0e-15
 N_ITER_MAX = 256
 
+DEFAULT_BETA = 0.0
+DEFAULT_F0 = 0.0
+DEFAULT_N = 2**14
+DEFAULT_ETA_MAX = 10.0
+DEFAULT_H0_MIN = 0.0
+DEFAULT_H0_MAX = 0.0
+
 def first_order_system( f, g, h, beta ):
     fp = g
     gp = h
@@ -232,12 +239,12 @@ def save_profiles( eta, f, g, h, beta ):
             output_file.write( line )
 
 def main( argc, argv ):
-    beta = 0.0
-    f0 = 0.0
-    n = 2**14
-    eta_max = 10.0
-    h0_min = 0.0
-    h0_max = 0.0
+    beta = DEFAULT_BETA
+    f0 = DEFAULT_F0
+    n = DEFAULT_N
+    eta_max = DEFAULT_ETA_MAX
+    h0_min = DEFAULT_H0_MIN
+    h0_max = DEFAULT_H0_MAX
 
     if ( argc > 1 ):
         beta = float( argv[1] )

@@ -17,6 +17,9 @@
 import fsbl
 import sys
 
+DEFAULT_BETA_MIN = -0.20
+DEFAULT_BETA_MAX = -0.19
+
 H0 = 0.0
 
 def bisection_search( f0, n, eta_max, beta_min, beta_max ):
@@ -74,11 +77,11 @@ def bisection_search( f0, n, eta_max, beta_min, beta_max ):
     return beta_c, eta, f_c, g_c, h_c
 
 def main( argc, argv ):
-    f0 = 0.0
-    n = 2**14
-    eta_max = 10.0
-    beta_min = -0.20
-    beta_max = -0.19
+    f0 = fsbl.DEFAULT_F0
+    n = fsbl.DEFAULT_N
+    eta_max = fsbl.DEFAULT_ETA_MAX
+    beta_min = DEFAULT_BETA_MIN
+    beta_max = DEFAULT_BETA_MAX
 
     if ( argc > 1 ):
         f0 = float( argv[1] )
