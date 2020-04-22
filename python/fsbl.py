@@ -261,7 +261,7 @@ def main( argc, argv ):
 
     eta, f, g, h = bisection_search( beta, f0, n, eta_max, h0_min, h0_max )
 
-    print( "h0   = {:f}".format( h[0]   ) )
+    print( "h0   = {:f}".format( h[0]  ) )
     print( "ginf = {:f}".format( g[-1] ) )
 
     if ( ( g[-1] - GINF )**2.0 < GINF_TOL**2.0 ):
