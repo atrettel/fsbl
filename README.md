@@ -38,10 +38,13 @@ parameters work:
 
     $ python3 fsbl.py 2.0 0.0 16384 10.0 1.67 1.69
 
-Note that the program has difficulty calculating the profile as it approaches
-separation at `beta = -0.19884`.  It can get rather close (`beta = -0.198837`)
-but not all the way there as it is written right now.  It should be possible to
-correct this issue but I at least wanted to note it for the time being.
+To calculate the separating profile (`beta = -0.1988377350467045`), run the
+program written for just this purpose:
+
+    $ python3 separation.py
+
+This program assumes that `h0 = 0.0` and uses a similar bisection search
+algorithm to determine the correct value of `beta`.
 
 
 ## TODO list
