@@ -20,10 +20,7 @@ import sys
 H0 = 0.0
 
 def bisection_search( f0, n, eta_max, beta_min, beta_max ):
-    deta = eta_max / float(n-1)
-    eta = [0.0] * n
-    for i in range(n-1):
-        eta[i+1] = eta[i] + deta
+    eta = fsbl.create_similarity_coordinate( n, eta_max )
 
     beta_l = beta_min
     beta_r = beta_max

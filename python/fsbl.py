@@ -89,6 +89,14 @@ def solve_rk4( f0, h0, beta, eta ):
 
     return f, g, h
 
+def create_similarity_coordinate( n, eta_max ):
+    deta = eta_max / float(n-1)
+    eta = [0.0] * n
+    for i in range(n-1):
+        eta[i+1] = eta[i] + deta
+
+    return eta
+
 def find_bisection_search_interval( f0, h0_min, h0_max, beta, eta ):
     n = len(eta)
 
@@ -135,10 +143,7 @@ def find_bisection_search_interval( f0, h0_min, h0_max, beta, eta ):
     return h0_l, h0_r
 
 def bisection_search( beta, f0, n, eta_max, h0_min, h0_max ):
-    deta = eta_max / float(n-1)
-    eta = [0.0] * n
-    for i in range(n-1):
-        eta[i+1] = eta[i] + deta
+    eta = create_similarity_coordinate( n, eta_max )
 
     if ( h0_max == h0_min ):
         h0_l, h0_r = find_bisection_search_interval(
