@@ -1,0 +1,121 @@
+#!/usr/bin/env python3
+
+# Copyright (C) 2020 Andrew Trettel
+# 
+# FSBL is free software: you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+# 
+# FSBL is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License along with
+# FSBL.  If not, see <https://www.gnu.org/licenses/>.
+
+import fsbl
+import sys
+
+H0 = 0.0
+
+def bisection_search( f0, n, eta_max, beta_min, beta_max ):
+    deta = eta_max / float(n-1)
+    eta = [0.0] * n
+    for i in range(n-1):
+        eta[i+1] = eta[i] + deta
+
+    beta_l = beta_min
+    beta_r = beta_max
+
+    assert( beta_r > beta_l )
+
+    print( "beta_l   = {:f}".format( beta_l ) )
+    print( "beta_r   = {:f}".format( beta_r ) )
+
+    f_l, g_l, h_l = fsbl.solve_rk4( f0, H0, beta_l, eta )
+    sign_l = ( g_l[-1] > fsbl.GINF )
+
+    f_r, g_r, h_l = fsbl.solve_rk4( f0, H0, beta_r, eta )
+    sign_r = ( g_r[-1] > fsbl.GINF )
+
+    assert( sign_l != sign_r )
+
+    n_iter = 0
+    while ( n_iter < fsbl.N_ITER_MAX ):
+        beta_c = 0.5 * ( beta_l + beta_r )
+        f_c, g_c, h_c = fsbl.solve_rk4( f0, H0, beta_c, eta )
+        sign_c = ( g_c[-1] > fsbl.GINF )
+
+        if ( ( beta_r - beta_l ) <= 0.0 ):
+            print( "Interval has zero length." )
+            break
+        elif ( ( g_c[-1] - fsbl.GINF )**2.0 < fsbl.GINF_TOL**2.0 ):
+            print( "Solution within tolerance (GINF_TOL = {:e}).".format(
+                fsbl.GINF_TOL
+            ) )
+            break
+
+        if ( sign_c == sign_l ):
+            beta_l = beta_c
+            f_l = f_c
+            g_l = g_c
+            h_l = h_c
+        else:
+            beta_r = beta_c
+            f_r = f_c
+            g_r = g_c
+            h_r = h_c
+
+        n_iter += 1
+
+    if ( n_iter == fsbl.N_ITER_MAX ):
+        print( "Maximum number of iterations (N_ITER_MAX = {:d}).".format(
+            fsbl.N_ITER_MAX
+        ) )
+
+    return beta_c, eta, f_c, g_c, h_c
+
+def main( argc, argv ):
+    f0 = 0.0
+    n = 2**14
+    eta_max = 10.0
+    beta_min = -0.20
+    beta_max = -0.19
+
+    if ( argc > 1 ):
+        f0 = float( argv[1] )
+
+    if ( argc > 2 ):
+        n = int( argv[2] )
+
+    if ( argc > 3 ):
+        eta_max = float( argv[3] )
+
+    if ( argc > 4 ):
+        h0_min = float( argv[4] )
+
+    if ( argc > 5 ):
+        h0_max = float( argv[5] )
+
+    print( "f0       = {:f}".format( f0       ) )
+    print( "n        = {:d}".format( n        ) )
+    print( "eta_max  = {:f}".format( eta_max  ) )
+    print( "beta_min = {:f}".format( beta_min ) )
+    print( "beta_max = {:f}".format( beta_max ) )
+
+    beta, eta, f, g, h = bisection_search( f0, n, eta_max, beta_min, beta_max )
+
+    print( "h0   = {:f}".format( h[0]  ) )
+    print( "ginf = {:f}".format( g[-1] ) )
+
+    print( "beta = {:+20.16f}".format( beta ) )
+
+    if ( ( g[-1] - fsbl.GINF )**2.0 < fsbl.GINF_TOL**2.0 ):
+        fsbl.save_profiles( eta, f, g, h, beta )
+        exit(0)
+    else:
+        exit(1)
+
+if __name__ == "__main__":
+    main( len(sys.argv), sys.argv )
