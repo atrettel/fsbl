@@ -210,7 +210,7 @@ def bisection_search( beta, f0, n, eta_max, h0_min, h0_max ):
 def save_profiles( eta, f, g, h, beta ):
     n = len(eta)
 
-    filename = "profiles_{:+10.8f}_{:+10.8f}_{:d}_{:10.8}.csv".format(
+    filename = "profiles_{:+10.8f}_{:+10.8f}_{:6d}_{:5.3f}.csv".format(
        beta,
        f[0],
        n,
@@ -228,7 +228,7 @@ def save_profiles( eta, f, g, h, beta ):
         output_file.write( header )
 
         for i in range(n):
-            line = "{:5d}, {:+20.16f}, {:+20.16f}, {:+20.16f}, {:+20.16f},\n".format(
+            line = "{:6d}, {:+20.16f}, {:+20.16f}, {:+20.16f}, {:+20.16f},\n".format(
                 i+1,
                 eta[i],
                 f[i],
@@ -273,8 +273,8 @@ def main( argc, argv ):
 
     eta, f, g, h = bisection_search( beta, f0, n, eta_max, h0_min, h0_max )
 
-    print( "h0   = {:f}".format( h[0]  ) )
-    print( "ginf = {:f}".format( g[-1] ) )
+    print( "h0   = {:+20.16f}".format( h[0]  ) )
+    print( "ginf = {:+20.16f}".format( g[-1] ) )
 
     if ( ( g[-1] - GINF )**2.0 < GINF_TOL**2.0 ):
         save_profiles( eta, f, g, h, beta )

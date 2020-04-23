@@ -106,8 +106,8 @@ def main( argc, argv ):
 
     beta, eta, f, g, h = bisection_search( f0, n, eta_max, beta_min, beta_max )
 
-    print( "h0   = {:f}".format( h[0]  ) )
-    print( "ginf = {:f}".format( g[-1] ) )
+    print( "h0   = {:+20.16f}".format( h[0]  ) )
+    print( "ginf = {:+20.16f}".format( g[-1] ) )
 
     print( "beta = {:+20.16f}".format( beta ) )
 
