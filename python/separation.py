@@ -93,10 +93,10 @@ def main( argc, argv ):
         eta_max = float( argv[3] )
 
     if ( argc > 4 ):
-        h0_min = float( argv[4] )
+        beta_min = float( argv[4] )
 
     if ( argc > 5 ):
-        h0_max = float( argv[5] )
+        beta_max = float( argv[5] )
 
     print( "f0       = {:f}".format( f0       ) )
     print( "n        = {:d}".format( n        ) )
