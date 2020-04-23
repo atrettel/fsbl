@@ -210,7 +210,7 @@ def bisection_search( beta, f0, n, eta_max, h0_min, h0_max ):
 def save_profiles( eta, f, g, h, beta ):
     n = len(eta)
 
-    filename = "profiles_{:+10.8f}_{:+10.8f}_{:6d}_{:5.3f}.csv".format(
+    filename = "profiles_{:+10.8f}_{:+10.8f}_{:6d}_{:4.1f}.csv".format(
        beta,
        f[0],
        n,
