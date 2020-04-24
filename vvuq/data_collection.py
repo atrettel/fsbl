@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env python3
 
 # Copyright (C) 2020 Andrew Trettel
 # 
@@ -14,20 +14,21 @@
 # You should have received a copy of the GNU General Public License along with
 # FSBL.  If not, see <https://www.gnu.org/licenses/>.
 
-attached_command="python3 ../python/fsbl.py"
-separated_command="python3 ../python/separation.py"
+import subprocess
 
-for eta_max in 5.0 10.0 20.0
-do
-    for n in 32 64 128 256 512 1024 2048 4096 8192 16384
-    do
-        for beta in -0.18 0.0 0.3 1.0
-        do
-            echo
-            $attached_command "$beta" 0.0 "$n" "$eta_max"
-        done
+for eta_max in [ 5.0, 10.0, 20.0 ]:
+    for n in [ 2**5, 2**6, 2**7, 2**8, 2**9, 2**10, 2**11, 2**12, 2**13,
+        2**14 ]:
+        for beta in [ -0.18, 0.0, 0.3, 1.0 ]:
+            completed_process = subprocess.run( [
+                "python3",
+                "../python/fsbl.py",
+                str(beta),
+                "0.0",
+                str(n),
+                str(eta_max),
+            ] )
 
-        echo
-        $separated_command 0.0 "$n" "$eta_max"
-    done
-done
+            print( "Return code: {:d}\n".format( completed_process.returncode ) )
+
+exit(0)
