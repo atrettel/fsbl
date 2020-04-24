@@ -223,7 +223,8 @@ def save_profiles( eta, f, g, h, beta ):
             f[0],
         )
 
-        header += "# (1) point number, (2) eta, (3) f, (4) g, (5) h\n"
+        header += "# (1) point number, (2) eta, (3) f, "
+        header += "(4) g = f', (5) h = f''\n"
 
         output_file.write( header )
 
