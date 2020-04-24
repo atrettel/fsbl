@@ -3,11 +3,6 @@ fsbl
 
 Falkner-Skan boundary layer solvers in multiple programming languages.
 
-I want to use this project to write the same program in multiple languages.
-The point is so that I can evaluate how the different languages represent the
-program, especially in regards to how they handle different numerical issues
-like arrays and floating point numbers.
-
 
 ## Usage
 
@@ -51,12 +46,14 @@ algorithm to determine the correct value of `beta`.
 
 - Code ported to several languages, including C, C++, Fortran, Java, Julia, ...
 
-- Detailed documentation on the mathematics behind the Falkner-Skan profiles.
+- Detailed documentation on the mathematics behind the Falkner-Skan profiles
+  and the program's implementation of the shooting method using bisection
+  search.
 
 - Verification and validation and uncertainty quantification.
 
 
-## Tabulated verification and validation sources
+## Tabulated benchmarks for comparison
 
 - Hartree, D. R. 1937.  "On an Equation Occurring in Falkner and Skan's
   Approximate Treatment of the Equations of the Boundary Layer".  Mathematical
