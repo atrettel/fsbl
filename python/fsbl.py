@@ -217,11 +217,6 @@ def save_profiles( eta, f, g, h, beta ):
        max(eta),
     ).replace( " ", "0" )
 
-    m = [0.0] * n
-    for i in range(n):
-        fp, gp, hp = first_order_system( f[i], g[i], h[i], beta )
-        m[i] = hp
-
     with open( filename, "w" ) as output_file:
         header = "# Falker-Skan profiles for beta = {:+10.8f}, f0 = {:+10.8f}\n".format(
             beta,
@@ -234,13 +229,15 @@ def save_profiles( eta, f, g, h, beta ):
         output_file.write( header )
 
         for i in range(n):
+            fp, gp, hp = first_order_system( f[i], g[i], h[i], beta )
+
             line = "{:6d}, {:+20.16f}, {:+20.16f}, {:+20.16f}, {:+20.16f}, {:+20.16f}\n".format(
                 i+1,
                 eta[i],
                 f[i],
                 g[i],
                 h[i],
-                m[i],
+                hp,
             )
 
             output_file.write( line )
