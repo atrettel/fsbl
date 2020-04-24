@@ -31,4 +31,15 @@ for eta_max in [ 5.0, 10.0, 20.0 ]:
 
             print( "Return code: {:d}\n".format( completed_process.returncode ) )
 
+        # Separation
+        completed_process = subprocess.run( [
+            "python3",
+            "../python/separation.py",
+            "0.0",
+            str(n),
+            str(eta_max),
+        ] )
+
+        print( "Return code: {:d}\n".format( completed_process.returncode ) )
+
 exit(0)
