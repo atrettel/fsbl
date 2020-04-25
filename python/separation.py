@@ -36,7 +36,7 @@ def bisection_search( f0, n, eta_max, beta_min, beta_max ):
     f_l, g_l, h_l = fsbl.solve_rk4( f0, H0, beta_l, eta )
     sign_l = ( g_l[-1] > fsbl.GINF )
 
-    f_r, g_r, h_l = fsbl.solve_rk4( f0, H0, beta_r, eta )
+    f_r, g_r, h_r = fsbl.solve_rk4( f0, H0, beta_r, eta )
     sign_r = ( g_r[-1] > fsbl.GINF )
 
     assert( sign_l != sign_r )
