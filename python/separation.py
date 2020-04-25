@@ -20,8 +20,6 @@ import sys
 DEFAULT_BETA_MIN = -0.20
 DEFAULT_BETA_MAX = -0.19
 
-H0 = 0.0
-
 def bisection_search( f0, n, eta_max, beta_min, beta_max ):
     eta = fsbl.create_similarity_coordinate( n, eta_max )
 
@@ -33,10 +31,10 @@ def bisection_search( f0, n, eta_max, beta_min, beta_max ):
     print( "beta_l   = {:f}".format( beta_l ) )
     print( "beta_r   = {:f}".format( beta_r ) )
 
-    f_l, g_l, h_l = fsbl.solve_rk4( f0, H0, beta_l, eta )
+    f_l, g_l, h_l = fsbl.solve_rk4( f0, fsbl.H0_SEPARATION, beta_l, eta )
     sign_l = ( g_l[-1] > fsbl.GINF )
 
-    f_r, g_r, h_r = fsbl.solve_rk4( f0, H0, beta_r, eta )
+    f_r, g_r, h_r = fsbl.solve_rk4( f0, fsbl.H0_SEPARATION, beta_r, eta )
     sign_r = ( g_r[-1] > fsbl.GINF )
 
     assert( sign_l != sign_r )
@@ -44,7 +42,7 @@ def bisection_search( f0, n, eta_max, beta_min, beta_max ):
     n_iter = 0
     while ( n_iter < fsbl.N_ITER_MAX ):
         beta_c = 0.5 * ( beta_l + beta_r )
-        f_c, g_c, h_c = fsbl.solve_rk4( f0, H0, beta_c, eta )
+        f_c, g_c, h_c = fsbl.solve_rk4( f0, fsbl.H0_SEPARATION, beta_c, eta )
         sign_c = ( g_c[-1] > fsbl.GINF )
 
         if ( ( beta_r - beta_l ) <= 0.0 ):

@@ -17,18 +17,19 @@
 import math
 import sys
 
-ALPHA = 1.0
-G0 = 0.0
-GINF = 1.0
-GINF_TOL = 1.0e-15
-N_ITER_MAX = 256
-
 DEFAULT_BETA = 0.0
 DEFAULT_F0 = 0.0
 DEFAULT_N = 2**14
 DEFAULT_ETA_MAX = 10.0
 DEFAULT_H0_MIN = 0.0
 DEFAULT_H0_MAX = 0.0
+
+ALPHA = 1.0
+G0 = 0.0
+GINF = 1.0
+GINF_TOL = 1.0e-15
+H0_SEPARATION = 0.0
+N_ITER_MAX = 256
 
 def first_order_system( f, g, h, beta ):
     fp = g
