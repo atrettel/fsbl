@@ -45,7 +45,7 @@ def secant_method( beta, n, eta_max, f0_1, f0_2 ):
 
         if ( i_iter == fsbl.N_ITER_MAX ):
             print( "Maximum number of iterations (N_ITER_MAX = {:d}).".format(
-                N_ITER_MAX
+                fsbl.N_ITER_MAX
             ) )
             break
 
