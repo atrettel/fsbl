@@ -20,6 +20,8 @@ import sys
 DEFAULT_F0_1 = -0.80
 DEFAULT_F0_2 = -0.85
 
+BLOWOFF_ETA_MAX = 40.0
+BLOWOFF_N = 65536
 H0_TOL = 1.0e-12
 
 def secant_method( beta, n, eta_max, f0_1, f0_2 ):
@@ -64,8 +66,8 @@ def secant_method( beta, n, eta_max, f0_1, f0_2 ):
 
 def main( argc, argv ):
     beta = fsbl.DEFAULT_BETA
-    n = fsbl.DEFAULT_N * 4
-    eta_max = fsbl.DEFAULT_ETA_MAX * 4.0
+    n = BLOWOFF_N
+    eta_max = BLOWOFF_ETA_MAX
     f0_1 = DEFAULT_F0_1
     f0_2 = DEFAULT_F0_2
 
