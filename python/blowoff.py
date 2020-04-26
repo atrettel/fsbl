@@ -57,8 +57,8 @@ def secant_method( beta, n, eta_max, f0_1, f0_2 ):
             h0_array[i_iter-1] - h0_array[i_iter-2]
         )
 
-        eta, f, g, h = fsbl.bisection_search( beta, f0_array[i_iter], n, eta_max,
-            fsbl.H0_SEPARATION, h0_array[i_iter-1] )
+        eta, f, g, h = fsbl.bisection_search( beta, f0_array[i_iter], n,
+            eta_max, fsbl.H0_SEPARATION, h0_array[i_iter-1] )
 
         h0_array[i_iter] = h[i_iter]
 
