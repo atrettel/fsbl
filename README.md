@@ -52,38 +52,6 @@ algorithm to determine the correct value of `beta`.
 
 - Verification and validation and uncertainty quantification.
 
-
-## Tabulated benchmarks for comparison
-
-- Hartree, D. R. 1937.  "On an Equation Occurring in Falkner and Skan's
-  Approximate Treatment of the Equations of the Boundary Layer".  Mathematical
-  Proceedings of the Cambridge Philosophical Society 33 (2), pp. 223-239.
-
-    - Falkner-Skan boundary layers without suction and blowing.
-
-    - <https://doi.org/10.1017/S0305004100019575>
-
-- Howarth, L. 1938.  "On the solution of the laminar boundary layer equations".
-  Proceedings of the Royal Society A: Mathematical, Physical and Engineering
-  Sciences 164, pp. 547-579.
-
-    - Blasius boundary layer without suction or blowing.
-
-    - <https://doi.org/10.1098/rspa.1938.0037>
-
-- Emmons, H. W. and Leigh, D. C. 1954.  "Tabulation of the Blasius Function
-  with Blowing and Suction".  Aeronautical Research Council Current Paper 157.
-  ARC-CP-157.
-
-    - Blasius boundary layers with suction and blowing.
-
-- Inglis, J. A. 1962.  "A digital computer solution of the Falkner and Skan
-  boundary layer equation."  Naval Postgraduate School master's thesis.
-
-    - Falkner-Skan boundary layers without suction and blowing.
-
-    - <https://apps.dtic.mil/sti/citations/AD0481404>
-
 -------------------------------------------------------------------------------
 
 Copyright © 2020 Andrew Trettel
